@@ -1,0 +1,314 @@
+* A F&B manager wants to determine whether there is any significant difference in the diameter of the cutlet between two units. A randomly selected sample of cutlets was collected from both units and measured? Analyze the data and draw inferences at 5% significance level. Please state the assumptions and tests that you carried out to check validity of the assumptions.
+> Cutlets <- read.csv("C:/Users/hi/Desktop/excelR/Cutlets.csv")
+>   View(Cutlets)
+> attach(Cutlets)
+> shapiro.test(Unit.A)
+
+	Shapiro-Wilk normality test
+
+data:  Unit.A
+W = 0.96495, p-value = 0.32
+
+> #as p-value is > 0.05 then p high null fly so it follows a normal distribution So 
+> shapiro.test(Unit.B)
+
+	Shapiro-Wilk normality test
+
+data:  Unit.B
+W = 0.97273, p-value = 0.5225
+
+> #as p-value is > 0.05 then p high null fly so it follows a normal distribution So unit.B also Normally distributed
+> #Now we should find out the variance of the two statistical test
+> var.test(Unit.A,Unit.B)
+
+	F test to compare two variances
+
+data:  Unit.A and Unit.B
+F = 0.70536, num df = 34, denom df = 34, p-value = 0.3136
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.3560436 1.3974120
+sample estimates:
+ratio of variances 
+         0.7053649 
+
+> ?t.test
+> t.test(Unit.A,Unit.B,mu=0,var.equal = T,paired = F)
+
+	Two Sample t-test
+
+data:  Unit.A and Unit.B
+t = 0.72287, df = 68, p-value = 0.4722
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.09646454  0.20605311
+sample estimates:
+mean of x mean of y 
+ 7.019091  6.964297 
+
+> #As p-value = 0.4722 is less than 0.05 so the null hypothesis is rejected so mean is not equal
+> t.test(Unit.A,Unit.B,paired = FALSE, var.equal = TRUE, alternative = "greater")
+
+	Two Sample t-test
+
+data:  Unit.A and Unit.B
+t = 0.72287, df = 68, p-value = 0.2361
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+ -0.0716096        Inf
+sample estimates:
+mean of x mean of y 
+ 7.019091  6.964297 
+
+> #As in this p-value = 0.2361 which is greater than 0.05 so the mean of Unit.A is greater than Unit.B
+* A hospital wants to determine whether there is any difference in the average Turn Around Time (TAT) of reports of the laboratories on their preferred list. They collected a random sample and recorded TAT for reports of 4 laboratories. TAT is defined as sample collected to report dispatch.
+   
+  Analyze the data and determine whether there is any difference in average TAT among the different laboratories at 5% significance level.
+> LabTAT <- read.csv("C:/Users/hi/Desktop/excelR/LabTAT.csv", header=FALSE)
+>   View(LabTAT)
+> attach(LabTAT)
+> shapiro.test(LabTAT$V1)
+Error in shapiro.test(LabTAT$V1) : is.numeric(x) is not TRUE
+> LabTAT1=LabTAT[-1,]
+> View(LabTAT1)
+> attach(LabTAT1)
+The following objects are masked from LabTAT:
+
+    V1, V2, V3, V4
+
+> shapiro.test(LabTAT1$V1)
+Error in shapiro.test(LabTAT1$V1) : is.numeric(x) is not TRUE
+> str(LabTAT1)
+'data.frame':	120 obs. of  4 variables:
+ $ V1: Factor w/ 120 levels "138.3","143.52",..: 85 31 105 52 107 65 103 19 8 16 ...
+ $ V2: Factor w/ 120 levels "140.55","142.38",..: 23 79 101 71 36 103 24 37 51 109 ...
+ $ V3: Factor w/ 121 levels "159.69","170.58",..: 11 54 64 59 74 20 97 25 36 86 ...
+ $ V4: Factor w/ 118 levels "124.06","126.94",..: 65 44 110 95 26 46 30 57 27 51 ...
+> fg= data.frame(LabTAT1)
+> v1= as.numeric(LabTAT1$V1)
+> v2= as.numeric(LabTAT1$V2)
+> v3= as.numeric(LabTAT1$V3)
+> v4= as.numeric(LabTAT1$V4)
+> str(fg)
+'data.frame':	120 obs. of  4 variables:
+ $ V1: Factor w/ 120 levels "138.3","143.52",..: 85 31 105 52 107 65 103 19 8 16 ...
+ $ V2: Factor w/ 120 levels "140.55","142.38",..: 23 79 101 71 36 103 24 37 51 109 ...
+ $ V3: Factor w/ 121 levels "159.69","170.58",..: 11 54 64 59 74 20 97 25 36 86 ...
+ $ V4: Factor w/ 118 levels "124.06","126.94",..: 65 44 110 95 26 46 30 57 27 51 ...
+> class(LabTAT1$V1)
+[1] "factor"
+> shapiro.test(LabTAT1$V1)
+Error in shapiro.test(LabTAT1$V1) : is.numeric(x) is not TRUE
+> LabTAT1$V1= as.numeric(LabTAT1$V1)
+> LabTAT1$V2= as.numeric(as.character(LabTAT1$V2))
+> LabTAT1=LabTAT[-1,]
+> LabTAT1$V1= as.numeric(as.character(LabTAT1$V1))
+> class(LabTAT1$V1)
+[1] "numeric"
+> LabTAT1$V2= as.numeric(as.character(LabTAT1$V2))
+> LabTAT1$V3= as.numeric(as.character(LabTAT1$V3))
+> LabTAT1$V4= as.numeric(as.character(LabTAT1$V4))
+> shapiro.test(LabTAT1$V1)
+
+	Shapiro-Wilk normality test
+
+data:  LabTAT1$V1
+W = 0.99018, p-value = 0.5508
+
+> # as P value 0.5508 is more than 0.05 so for it is normally distributed
+> shapiro.test(LabTAT1$V2)
+
+	Shapiro-Wilk normality test
+
+data:  LabTAT1$V2
+W = 0.99363, p-value = 0.8637
+
+> # as P value 0.8637 is more than 0.05 so for it is normally distributed
+> shapiro.test(LabTAT1$V3)
+
+	Shapiro-Wilk normality test
+
+data:  LabTAT1$V3
+W = 0.98863, p-value = 0.4205
+
+> # as P value 0.4205 is more than 0.05 so for it is normally distributed
+> shapiro.test(LabTAT1$V4)
+
+	Shapiro-Wilk normality test
+
+data:  LabTAT1$V4
+W = 0.99138, p-value = 0.6619
+
+> # as P value 0.6619 is more than 0.05 so for it is normally distributed
+> # So all the values of the test is normally distributed so we can apply anova test
+> ?anova
+> anova(LabTAT1$V1,LabTAT1$V2,LabTAT1$V3,LabTAT1$V4)
+Error in UseMethod("anova") : 
+  no applicable method for 'anova' applied to an object of class "c('double', 'numeric')"
+> anova(LabTAT$V1,LabTAT$V2,LabTAT$V3,LabTAT$V4)
+Error in UseMethod("anova") : 
+  no applicable method for 'anova' applied to an object of class "factor"
+> srack1=stack(LabTAT)
+Error in stack.data.frame(LabTAT) : no vector columns were selected
+> srack1=stack(LabTAT1)
+> View(LabTAT1)
+> View(stack1)
+Error in View : object 'stack1' not found
+> View(srack1)
+> attach(srack1)
+> anova(values~ind)
+Error in UseMethod("anova") : 
+  no applicable method for 'anova' applied to an object of class "formula"
+> aov(values~ind,data = srack1)
+Call:
+   aov(formula = values ~ ind, data = srack1)
+
+Terms:
+                      ind Residuals
+Sum of Squares   79979.17 106904.61
+Deg. of Freedom         3       476
+
+Residual standard error: 14.98631
+Estimated effects may be unbalanced
+> anova_res=  aov(values~ind,data = srack1)
+> summary(anova_res)
+             Df Sum Sq Mean Sq F value Pr(>F)    
+ind           3  79979   26660   118.7 <2e-16 ***
+Residuals   476 106905     225                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> # as the p value is less than 0.05 so the null hypothesis is rejected i.e. the the TAT Score is different for all the variables
+*      Sales of products in four different regions is tabulated for males and females. Find if male-female buyer rations are similar across regions.
+> BuyerRatio <- read.csv("C:/Users/hi/Desktop/excelR/BuyerRatio.csv")
+>   View(BuyerRatio)
+> stacked_cof<-stack(BuyerRatio)
+Warning message:
+In stack.data.frame(BuyerRatio) : non-vector columns will be ignored
+> attach(stacked_cof)
+> View(stacked_cof)
+> table(stacked_cof$ind,stacked_cof$values)
+       
+        50 70 131 142 435 750 1356 1523
+  East   1  0   0   0   1   0    0    0
+  West   0  0   0   1   0   0    0    1
+  North  0  0   1   0   0   0    1    0
+  South  0  1   0   0   0   1    0    0
+> chisq.test(table(stacked_cof$ind,stacked_cof$values))
+
+	Pearson's Chi-squared test
+
+data:  table(stacked_cof$ind, stacked_cof$values)
+X-squared = 24, df = 21, p-value = 0.2931
+#P-value>0.05.Hence we fail to reject Null.
+Hence proportion of male and female across regions is same.
+
+*  TeleCall uses 4 centers around the globe to process customer order forms. They audit a certain %  of the customer order forms. Any error in order form renders it defective and has to be reworked before processing.  The manager wants to check whether the defective %  varies by centre. Please analyze the data at 5% significance level and help the manager draw appropriate inferences.
+> `Costomer+OrderForm` <- read.csv("C:/Users/hi/Desktop/excelR/Costomer+OrderForm.csv")
+>   View(`Costomer+OrderForm`)
+> order_c = `Costomer+OrderForm`
+> phili= order_c$Phillippines
+> table(phili)
+phili
+ Defective Error Free 
+        29        271 
+> indo = order_c$Indonesia
+> table(indo)
+indo
+ Defective Error Free 
+        33        267 
+> Malta = order_c$Malta
+> table(Malta)
+Malta
+ Defective Error Free 
+        31        269 
+> ind = order_c$India
+> table(ind)
+ind
+ Defective Error Free 
+        20        280 
+> mat=matrix(c(29,33,31,20, 271,267,269,280),nrow=2,ncol=4, byrow =TRUE, dimnames = list(country=c("Defective","Errorfree"),country=c("phili","indo","malta","india")))
+> View(mat)
+> stack(mat)
+Error in rep.int(factor(names(x), unique(names(x))), lengths(x)) : 
+  invalid 'times' value
+> data.frame(mat)
+          phili indo malta india
+Defective    29   33    31    20
+Errorfree   271  267   269   280
+> stack(data.frame(mat))
+  values   ind
+1     29 phili
+2    271 phili
+3     33  indo
+4    267  indo
+5     31 malta
+6    269 malta
+7     20 india
+8    280 india
+> table(stack(data.frame(mat)))
+      ind
+values phili indo malta india
+   20      0    0     0     1
+   29      1    0     0     0
+   31      0    0     1     0
+   33      0    1     0     0
+   267     0    1     0     0
+   269     0    0     1     0
+   271     1    0     0     0
+   280     0    0     0     1
+> tt = table(stack(data.frame(mat)))
+> chisq.test(tt)
+
+	Pearson's Chi-squared test
+
+data:  tt
+X-squared = 24, df = 21, p-value = 0.2931
+
+Warning message:
+In chisq.test(tt) : Chi-squared approximation may be incorrect
+# as p is greater than 0.05 so the null hypothesis is excepted i.e. there is no difference in the mean of all the four countries
+
+
+*Fantaloons Sales managers commented that % of males versus females walking in to the store differ based on day of the week. Analyze the data and determine whether there is evidence at 5 % significance level to support this hypothesis.
+> r1= rep('weekday',400)
+> View(r1)
+> a1= Faltoons$Weekdays
+> View(a1)
+> a2= c(a1,r1)
+> View(a2)
+> a2= data.frame(a1,r1)
+> table(a2)
+        r1
+a1       weekday
+  Female     287
+  Male       113
+> r2= rep(weekends,400)
+Error: object 'weekends' not found
+> r2= rep('weekends',400)
+> b1= Faltoons$Weekend
+> b2= data.frame(r2,b1)
+> View(b2)
+> b2= data.frame(b1,r2)
+> colnames(b2)= c('a1','r1')
+> v1 = rbind(a2,b2)
+> View(v1)
+> T1= table(v1$a1,v1$r1)
+> T1
+        
+         weekday weekends
+  Female     287      233
+  Male       113      167
+> ?prop.test
+> prop.test(T1, correct = FALSE)
+
+	2-sample test for equality of proportions without continuity correction
+
+data:  T1
+X-squared = 16.022, df = 1, p-value = 6.261e-05
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ 0.07673292 0.21997038
+sample estimates:
+   prop 1    prop 2 
+0.5519231 0.4035714 
+> # as the vale of p is less than 0.05 so the null hypothesis was rejected so there is a significant differnce between male and female depending on the days 
