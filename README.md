@@ -1,1 +1,1 @@
-# Basic-statistics
+# hypothesis testing
